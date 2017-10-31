@@ -16,8 +16,25 @@ public class Pathmaker : MonoBehaviour {
 
 //	DECLARE CLASS MEMBER VARIABLES:
 //	Declare a private integer called counter that starts at 0; 		// counter var will track how many floor tiles I've instantiated
+	private int counter = 0;
 //	Declare a public Transform called floorPrefab, assign the prefab in inspector;
+	public Transform floorPrefab;
+	public Transform floorPrefab2;
+	public Transform floorPrefab3;
 //	Declare a public Transform called pathmakerSpherePrefab, assign the prefab in inspector; 		// you'll have to make a "pathmakerSphere" prefab later
+	public Transform pathmakerSpherePrefab;
+
+	public static int globalTileCount = 0;
+	public static int pathmakerLifetime = 0;
+
+	public float moveSpeed;
+	public int floorTypeSpawned;
+
+
+	void Start () {
+		moveSpeed = Random.Range (5f, 10f);
+		floorTypeSpawned = Random.Range (1, 12);
+	}
 
 
 	void Update () {
@@ -28,11 +45,47 @@ public class Pathmaker : MonoBehaviour {
 //				... Else if number is 0.99f-1.0f, then instantiate a pathmakerSpherePrefab clone at my current position;
 //			// end elseIf
 
+		if (counter < 50) {
+			float directions = Random.Range (0.1f, 1.0f);
+			if (directions < 0.25f) {
+				transform.Rotate (0f, 90f, 0f);
+			} else if (directions > 0.25f && directions < 0.5f) {
+				transform.Rotate (0f, -90f, 0f);
+			} else if (directions > 0.98f && directions < 1.0f) {
+				Instantiate (pathmakerSpherePrefab);
+			}
+
+			if (floorTypeSpawned > 0 && floorTypeSpawned <= 5) {
+				Instantiate (floorPrefab, pathmakerSpherePrefab.transform.position, Quaternion.identity); // .identity means "fuck it"
+			} else if (floorTypeSpawned > 5 && floorTypeSpawned <= 10) {
+				Instantiate (floorPrefab2, pathmakerSpherePrefab.transform.position + new Vector3 (0f, 0.1f, 0f), Quaternion.identity); // .identity means "fuck it"
+			} else {
+				Instantiate (floorPrefab3, pathmakerSpherePrefab.transform.position + new Vector3 (0f, 0.2f, 0f), Quaternion.identity); // .identity means "fuck it"
+			}
+
+			globalTileCount++;
+			transform.Translate (0f, 0f, moveSpeed); // Move forward
+
+		} else {
+			Destroy(gameObject);
+		}
+
+		if (globalTileCount >= 500) {
+			Destroy (gameObject);
+		}
+
+		if (pathmakerLifetime <= 500) {
+			pathmakerLifetime++;
+		} else {
+			Destroy (gameObject);
+		}
+			
 //			Instantiate a floorPrefab clone at current position;
 //			Move forward ("forward", as in, the direction I'm currently facing) by 5 units;
 //			Increment counter;
 //		Else:
 //			Destroy my game object; 		// self destruct if I've made enough tiles already
+
 	}
 
 } // end of class scope
@@ -52,6 +105,7 @@ public class Pathmaker : MonoBehaviour {
 //	- code it so that all the Pathmakers can only spawn a grand total of 500 tiles in the entire world; how would you do that?
 //	- (hint: declare a "public static int" and have each Pathmaker check this "globalTileCount", somewhere in your code? if there are already enough tiles, then maybe the Pathmaker could Destroy my game object
 
+// DOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOONE
 
 
 // STEP 4: ======================================================================================
@@ -61,7 +115,7 @@ public class Pathmaker : MonoBehaviour {
 // b. how would you tune the probabilities to generate lots of long hallways? does it work?
 // c. tweak all the probabilities that you want... what % chance is there for a pathmaker to make a pathmaker? is that too high or too low?
 
-
+// DOOOOOOOOOOOOOOOOOOOOOOOOOOOOOONE
 
 // STEP 5: ===================================================================================
 // maybe randomize it even more?
@@ -69,7 +123,7 @@ public class Pathmaker : MonoBehaviour {
 // - randomize 2 more variables in Pathmaker.cs for each different Pathmaker... you would do this in Start()
 // - maybe randomize each pathmaker's lifetime? maybe randomize the probability it will turn right? etc. if there's any number in your code, you can randomize it if you move it into a variable
 
-
+// DOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOONE
 
 // STEP 6:  =====================================================================================
 // art pass, usability pass
